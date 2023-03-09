@@ -39,6 +39,19 @@ const allFilms = [
   ),
 ];
 
+class FilmsNotifier extends StateNotifier<List<Film>> {
+  FilmsNotifier() : super(allFilms);
+
+  // update film
+  void update(Film film, bool isFavorite) {
+    state = state
+        .map((thisFilm) => thisFilm.id == film.id
+            ? thisFilm.copy(isFavorite: isFavorite)
+            : thisFilm)
+        .toList();
+  }
+}
+
 // my app
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
