@@ -116,31 +116,66 @@ class HomePage extends ConsumerWidget {
         builder: (context, ref, child) {
           final dataModel = ref.watch(peopleProvder);
           return ListView.builder(
+            padding: const EdgeInsets.all(8.0),
             itemCount: dataModel.count,
             itemBuilder: (context, index) {
               final person = dataModel.people[index];
-              return ListTile(
-                title: InkWell(
-                  onTap: () async {
-                    final updatedPerson = await createOrUpdatePersonDialog(
-                      context,
-                      person,
-                    );
+              return Column(
+                children: [
+                  ListTile(
+                    title: InkWell(
+                      onTap: () async {
+                        final updatedPerson = await createOrUpdatePersonDialog(
+                          context,
+                          person,
+                        );
 
-                    if (updatedPerson != null) {
-                      dataModel.update(updatedPerson);
-                    }
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 8.0,
-                      bottom: 8.0,
+                        if (updatedPerson != null) {
+                          dataModel.update(updatedPerson);
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          top: 8.0,
+                          bottom: 8.0,
+                        ),
+                        child: Text(
+                          person.displayName,
+                        ),
+                      ),
                     ),
-                    child: Text(
-                      person.displayName,
+                    subtitle: Text(
+                      person.uuid,
+                      style: const TextStyle(
+                        fontSize: 10.0,
+                      ),
+                    ),
+                    trailing: FilledButton.icon(
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                      ),
+                      label: const Text("Delete"),
+                      icon: const Icon(Icons.delete),
+                      onPressed: () {
+                        dataModel.remove(person);
+                      },
+                    ),
+                    leading: CircleAvatar(
+                      radius: 20.0,
+                      child: Text(
+                        "${index + 1}",
+                        style: const TextStyle(
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  const Divider(
+                    thickness: 0.3,
+                  ),
+                ],
               );
             },
           );
@@ -182,7 +217,7 @@ Future<Person?> createOrUpdatePersonDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          icon: Icon(Icons.person_outline),
+          icon: const Icon(Icons.person_outline),
           title: Center(
               child: Text(
                   "${existingPerson == null ? 'Create' : 'Update'} Person")),
