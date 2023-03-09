@@ -11,6 +11,34 @@ void main() {
   );
 }
 
+// hardcoded films
+const allFilms = [
+  Film(
+    id: '1',
+    title: 'The Godfather',
+    description: 'Description for The Godfather',
+    isFavorite: false,
+  ),
+  Film(
+    id: '2',
+    title: 'The Godfather: Part II',
+    description: 'Description for The Godfather: Part II',
+    isFavorite: false,
+  ),
+  Film(
+    id: '3',
+    title: 'Shawshank Redemption',
+    description: 'Description for Shawshank Redemption',
+    isFavorite: false,
+  ),
+  Film(
+    id: '4',
+    title: 'The Dark Knight',
+    description: 'Description for The Dark Knight',
+    isFavorite: false,
+  ),
+];
+
 // my app
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -27,6 +55,49 @@ class MyApp extends StatelessWidget {
       home: const HomePage(),
     );
   }
+}
+
+@immutable
+class Film {
+  final String id;
+  final String title;
+  final String description;
+  final bool isFavorite;
+
+  const Film({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.isFavorite,
+  });
+
+  Film copy({
+    required bool isFavorite,
+  }) =>
+      Film(
+        id: id,
+        title: title,
+        description: description,
+        isFavorite: isFavorite,
+      );
+
+  @override
+  String toString() => 'Film(id: $id,'
+      'title: $title,'
+      'description: $description,'
+      'isFavorite: $isFavorite)';
+
+  @override
+  bool operator ==(covariant Film other) =>
+      id == other.id && isFavorite == other.isFavorite;
+
+  @override
+  int get hashCode => Object.hashAll(
+        [
+          id,
+          isFavorite,
+        ],
+      );
 }
 
 // home page
