@@ -52,6 +52,36 @@ class FilmsNotifier extends StateNotifier<List<Film>> {
   }
 }
 
+// favorite statuses
+enum FavoriteStatus {
+  all,
+  favorite,
+  notFavorite,
+}
+
+// favorite status provider
+final favoriteStatusProvider =
+    StateProvider<FavoriteStatus>((_) => FavoriteStatus.all);
+
+// all films provider
+final allFilmsProvider = StateNotifierProvider<FilmsNotifier, List<Film>>(
+  (_) => FilmsNotifier(),
+);
+
+// favorite films
+final favoriteFilmsProvider = Provider<Iterable<Film>>(
+  (ref) => ref.watch(allFilmsProvider).where(
+        (film) => film.isFavorite,
+      ),
+);
+
+// not-favorite films
+final notFavoriteFilmsProvider = Provider<Iterable<Film>>(
+  (ref) => ref.watch(allFilmsProvider).where(
+        (film) => !film.isFavorite,
+      ),
+);
+
 // my app
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -120,13 +150,124 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Home Page")),
+      appBar: AppBar(title: const Text("Films")),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const FilterWidget(),
+            Consumer(
+              builder: (context, ref, child) {
+                final filter = ref.watch(favoriteStatusProvider);
+                switch (filter) {
+                  case FavoriteStatus.all:
+                    return FilmsList(provider: allFilmsProvider);
+                  case FavoriteStatus.favorite:
+                    return FilmsList(provider: favoriteFilmsProvider);
+                  case FavoriteStatus.notFavorite:
+                    return FilmsList(provider: notFavoriteFilmsProvider);
+                  default:
+                    return FilmsList(provider: allFilmsProvider);
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// films widget
+class FilmsList extends ConsumerWidget {
+  final AlwaysAliveProviderBase<Iterable<Film>> provider;
+  const FilmsList({
+    required this.provider,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final films = ref.watch(provider);
+
+    return Expanded(
+      child: ListView.builder(
+        padding: const EdgeInsets.all(8.0),
+        itemCount: films.length,
+        itemBuilder: (context, index) {
+          final film = films.elementAt(index);
+          final favoriteIcon = film.isFavorite
+              ? Icon(
+                  Icons.favorite,
+                  color: Colors.red.shade600,
+                )
+              : const Icon(
+                  Icons.favorite_border,
+                );
+
+          return ListTile(
+            title: Text(
+              film.title,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            subtitle: Text(
+              film.description,
+            ),
+            trailing: IconButton(
+              icon: favoriteIcon,
+              onPressed: () {
+                final isFavorite = !film.isFavorite;
+                ref.read(allFilmsProvider.notifier).update(film, isFavorite);
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+// filter widget
+class FilterWidget extends StatelessWidget {
+  const FilterWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, child) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: DropdownButton(
+            isExpanded: true,
+            value: ref.watch(favoriteStatusProvider),
+            items: FavoriteStatus.values
+                .map(
+                  (fs) => DropdownMenuItem(
+                    value: fs,
+                    child: Text(
+                      fs.toString().toUpperCase().split('.').last,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ),
+                )
+                .toList(),
+            onChanged: (fs) {
+              ref
+                  .read(
+                    favoriteStatusProvider.notifier,
+                  )
+                  .state = fs!;
+            },
+          ),
+        );
+      },
     );
   }
 }
 
 // theme options
-final kDefaultFontFamily = GoogleFonts.notoSans().fontFamily;
+final kDefaultFontFamily = GoogleFonts.notoSansAdlam().fontFamily;
 
 final flexLight = FlexThemeData.light(
   scheme: FlexScheme.deepBlue,
