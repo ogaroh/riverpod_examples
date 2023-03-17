@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="facebook_app_id">951963099159054</string>
+    <string name="fb_login_protocol_scheme">fb951963099159054</string>
+    <string name="facebook_client_token">e031e110c3104809b7faaccc6c3c34e7</string>
+    <string name="app_name">SocialUp</string>
+</resources>

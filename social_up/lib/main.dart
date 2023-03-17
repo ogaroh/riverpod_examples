@@ -24,7 +24,8 @@ class MyApp extends StatelessWidget {
       title: 'SocialUp',
       theme: flexLight,
       darkTheme: flexDark,
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.dark, // TODO: change to ThemeMode.system
+      // themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       home: const HomePage(),
     );
