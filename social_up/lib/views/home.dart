@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_up/extensions/log.dart';
-import 'package:social_up/state/auth/backend/authenticator.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:social_up/state/auth/providers/auth_state_provider.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class MainView extends StatelessWidget {
+  const MainView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,36 +13,28 @@ class HomePage extends StatelessWidget {
           "SocialUp",
         ),
       ),
-      body: Column(
-        children: [
-          FilledButton.icon(
-            onPressed: () async {
-              final result = await Authenticator().loginWithGoogle();
-              result.log();
-            },
-            icon: const Icon(
-              FontAwesomeIcons.google,
+      body: Consumer(
+        builder: (context, ref, child) {
+          return Center(
+            child: FilledButton.icon(
+              onPressed: () async {
+                // log out
+                await ref.read(authStateProvider.notifier).logOut();
+              },
+              icon: const Icon(
+                Icons.logout,
+              ),
+              label: const Text("Log Out"),
             ),
-            label: const Text("Sign In with Google"),
-          ),
-          FilledButton.icon(
-            onPressed: () async {
-              final result = await Authenticator().loginWithFacebook();
-              result.log();
-            },
-            icon: const Icon(
-              FontAwesomeIcons.facebookF,
-            ),
-            label: const Text("Sign In with Facebook"),
-          ),
-        ],
+          );
+        },
       ),
-      floatingActionButton: const FloatingActionButton.extended(
-        onPressed: null,
-        label: Text("Post"),
-        icon: Icon(Icons.add_a_photo_outlined),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: const FloatingActionButton.extended(
+      //   onPressed: null,
+      //   label: Text("Post"),
+      //   icon: Icon(Icons.add_a_photo_outlined),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
