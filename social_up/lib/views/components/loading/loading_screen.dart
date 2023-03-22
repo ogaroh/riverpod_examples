@@ -1,35 +1,39 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:social_up/views/components/constants/strings.dart';
 import 'package:social_up/views/components/loading/loading_screen_controller.dart';
 
 class LoadingScreen {
+  // singleton declaration
   LoadingScreen._sharedInstance();
   static final LoadingScreen _shared = LoadingScreen._sharedInstance();
   factory LoadingScreen.instance() => _shared;
 
-  LoadingScreenController? controller;
+  // controller
+  LoadingScreenController? _controller;
 
+  // show the loading screen
   void show({
     required BuildContext context,
     String text = Strings.loading,
   }) {
-    if (controller?.update(text) ?? false) {
+    if (_controller?.update(text) ?? false) {
       return;
     } else {
-      controller = showOverlay(
+      _controller = showOverlay(
         context: context,
         text: text,
       );
     }
   }
 
+  // show the loading screen
   void hide() {
-    controller?.close();
-    controller = null;
+    _controller?.close();
+    _controller = null;
   }
 
+  // show the overlay
   LoadingScreenController? showOverlay({
     required BuildContext context,
     required String text,
@@ -38,9 +42,7 @@ class LoadingScreen {
     textController.add(text);
 
     final state = Overlay.of(context);
-    if (state == null) {
-      return null;
-    }
+
     final renderBox = context.findRenderObject() as RenderBox;
     final size = renderBox.size;
 
@@ -56,7 +58,7 @@ class LoadingScreen {
                 minWidth: size.width * 0.5,
               ),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).dialogBackgroundColor,
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Padding(
@@ -67,7 +69,7 @@ class LoadingScreen {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const SizedBox(height: 10),
-                      const CircularProgressIndicator(),
+                      const CircularProgressIndicator.adaptive(),
                       const SizedBox(height: 20),
                       StreamBuilder(
                         stream: textController.stream,
@@ -79,7 +81,9 @@ class LoadingScreen {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
-                                  ?.copyWith(color: Colors.black),
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             );
                           } else {
                             return Container();
@@ -104,7 +108,7 @@ class LoadingScreen {
         overlay.remove();
         return true;
       },
-      update: (text) {
+      update: (String text) {
         textController.add(text);
         return true;
       },
