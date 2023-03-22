@@ -31,8 +31,7 @@ class MyApp extends StatelessWidget {
       title: 'SocialUp',
       theme: flexLight,
       darkTheme: flexDark,
-      // themeMode: ThemeMode.system,
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       home: Consumer(
         builder: (context, ref, child) {
