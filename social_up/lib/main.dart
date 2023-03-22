@@ -4,10 +4,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:social_up/state/auth/providers/is_logged_in_provider.dart';
 import 'package:social_up/state/providers/is_loading_provider.dart';
 import 'package:social_up/views/components/loading/loading_screen.dart';
+import 'package:social_up/views/constants/strings.dart';
 import 'firebase_options.dart';
 import 'theme/theme.dart';
-import 'views/home.dart';
-import 'views/login.dart';
+import 'views/screens/home.dart';
+import 'views/components/login/login_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,10 +31,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SocialUp',
+      title: Strings.appName,
       theme: flexLight,
       darkTheme: flexDark,
-      themeMode: ThemeMode.system,
+      // themeMode: ThemeMode.system,
+      themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
       home: Consumer(
         builder: (context, ref, child) {

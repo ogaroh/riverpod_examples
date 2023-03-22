@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:social_up/state/auth/providers/auth_state_provider.dart';
+import 'package:social_up/views/constants/strings.dart';
 
 class MainView extends StatelessWidget {
   const MainView({super.key});
@@ -10,7 +11,7 @@ class MainView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Social Up",
+          Strings.appName,
         ),
       ),
       body: Consumer(
