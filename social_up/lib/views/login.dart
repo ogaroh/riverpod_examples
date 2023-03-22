@@ -21,35 +21,29 @@ class LoginView extends ConsumerWidget {
           "Login",
         ),
       ),
-      body: ref.watch(authStateProvider).isLoading
-          ? const Center(
-              child: CircularProgressIndicator.adaptive(),
-            )
-          : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  FilledButton.icon(
-                    onPressed:
-                        ref.read(authStateProvider.notifier).loginWithGoogle,
-                    icon: const Icon(
-                      FontAwesomeIcons.google,
-                    ),
-                    label: const Text("Sign In with Google"),
-                  ),
-                  FilledButton.icon(
-                    onPressed:
-                        ref.read(authStateProvider.notifier).loginWithFacebook,
-                    icon: const Icon(
-                      FontAwesomeIcons.facebookF,
-                    ),
-                    label: const Text("Sign In with Facebook"),
-                  ),
-                ],
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            FilledButton.icon(
+              onPressed: ref.read(authStateProvider.notifier).loginWithGoogle,
+              icon: const Icon(
+                FontAwesomeIcons.google,
               ),
+              label: const Text("Sign In with Google"),
             ),
+            FilledButton.icon(
+              onPressed: ref.read(authStateProvider.notifier).loginWithFacebook,
+              icon: const Icon(
+                FontAwesomeIcons.facebookF,
+              ),
+              label: const Text("Sign In with Facebook"),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
