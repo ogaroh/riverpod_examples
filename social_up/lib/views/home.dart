@@ -10,11 +10,11 @@ class MainView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "SocialUp",
+          "Social Up",
         ),
       ),
       body: Consumer(
-        builder: (context, ref, child) {
+        builder: (_, ref, child) {
           return Center(
             child: FilledButton.icon(
               onPressed: () async {
